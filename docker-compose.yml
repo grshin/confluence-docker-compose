@@ -16,13 +16,13 @@ services:
         depends_on:
             - confluence
     confluence:
-        image: atlassian/confluence-server:7.4.5  #서버로 사용할 버전 명시 가장 최신은 latest로 하면 됩니다.
+        image: atlassian/confluence-server:7.14.0  #서버로 사용할 버전 명시 가장 최신은 latest로 하면 됩니다.
         restart: always
-        container_name: confluence-7.4.5
+        container_name: confluence-7.14.0
         environment:
             JVM_MINIMUM_MEMORY: 2048m  #default메모리는 1g입니다. 서버환경에 따라 증감합니다.
             JVM_MAXIMUM_MEMORY: 2048m  #default메모리는 1g입니다. 서버환경에 따라 증감합니다.
-            ATL_PROXY_NAME: confluence.iisanse.com
+            ATL_PROXY_NAME: wiki.learnk8s.net
             ATL_PROXY_PORT: 443 
             ATL_TOMCAT_SCHEME: https
             ATL_TOMCAT_SECURE: "true"
