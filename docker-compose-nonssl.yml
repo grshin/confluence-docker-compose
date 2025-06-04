@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  confluence:
+    image: atlassian/confluence-server:7.14.0
+    restart: always
+    container_name: confluence-7.14.0
+    environment:
+      JVM_MINIMUM_MEMORY: 2048m
+      JVM_MAXIMUM_MEMORY: 2048m
+      ATL_PROXY_NAME: 192.168.0.11
+      ATL_PROXY_PORT: 8090
+      ATL_TOMCAT_SCHEME: http
+      ATL_TOMCAT_SECURE: 'false'
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    volumes:
+      - ./wiki-data:/var/atlassian/application-data/confluence
+      - ./mysql-driver/mysql-connector-java-5.1.49-bin.jar:/opt/atlassian/confluence/confluence/WEB-INF/lib/mysql-connector-java-5.1.49-bin.jar
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql-5.7
+    environment:
+      MYSQL_DATABASE: 'confluencedb'
+      MYSQL_USER: 'dbuser'
+      MYSQL_PASSWORD: 'dbpassword'
+      MYSQL_ROOT_PASSWORD: 'root'
+      TZ: 'Asia/Seoul'
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_bin
+      - --default-storage-engine=INNODB
+      - --max_allowed_packet=256M
+      - --transaction-isolation=READ-COMMITTED
+      - --innodb_log_file_size=2G
+      - --binlog_format=row
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: adminer
+    ports:
+      - '8081:8080'
